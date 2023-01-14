@@ -1,11 +1,17 @@
 from django.urls import path
-from .views import CraftsmanListView, CraftsmanCreateView, CraftsmanUpdateView, CraftsmanDeleteView,CreateCraftView
+from .views import CraftsmanListCreate, CraftsmanRetrieveUpdateDestroy, CraftListCreate, CraftRetrieveUpdateDestroy, CustomerListCreate, CustomerRetrieveUpdateDestroy, BookingListCreate, BookingRetrieveUpdateDestroy
 
 urlpatterns = [
-    path('craftsmen/', CraftsmanListView.as_view(), name='craftsman_list'),
-    path('craftsmen/create/', CraftsmanCreateView.as_view(), name='craftsman_create'),
-    path('craftsmen/<int:pk>/update/', CraftsmanUpdateView.as_view(), name='craftsman_update'),
-    path('craftsmen/<int:pk>/delete/', CraftsmanDeleteView.as_view(), name='craftsman_delete'),
-    path('create-craft/', CreateCraftView.as_view(), name='create_craft'),
-
+    path('craftsmen/', CraftsmanListCreate.as_view(),
+         name='craftsman-list-create'),
+    path('craftsmen/<int:pk>', CraftsmanRetrieveUpdateDestroy.as_view(),
+         name='craftsman-detail'),
+    path('crafts/', CraftListCreate.as_view(), name='craft-list-create'),
+    path('crafts/<int:pk>', CraftRetrieveUpdateDestroy.as_view(), name='craft-detail'),
+    path('customers/', CustomerListCreate.as_view(), name='customer-list-create'),
+    path('customers/<int:pk>', CustomerRetrieveUpdateDestroy.as_view(),
+         name='customer-detail'),
+    path('bookings/', BookingListCreate.as_view(), name='booking-list-create'),
+    path('bookings/<int:pk>', BookingRetrieveUpdateDestroy.as_view(),
+         name='booking-detail'),
 ]

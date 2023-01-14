@@ -1,10 +1,11 @@
 from django.contrib.auth.models import AbstractUser
 
 from django.db import models
+
 class Craftsman(models.Model):
     name = models.CharField(max_length=255)
-    phone = models.IntegerField(max_length=10)
-    email = models.EmailField(max_length=255)
+    phone = models.IntegerField(max_length=10, null=True)
+    email = models.EmailField(max_length=255,null=True)
     location = models.CharField(max_length=255,default="Jordan")
     def __str__(self):
         return self.name
