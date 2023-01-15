@@ -4,19 +4,18 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 
 from rest_framework.validators import UniqueValidator
-from .models import Custmer,CustmerProfile, CraftsmanProfile, User as UserModel
+from .models import Custmer,CustmerProfile, CraftsmanProfile, User 
 # from django.contrib.auth import authenticate
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user): #2 
-        token = super(MyTokenObtainPairSerializer, cls).get_token(user)
-        user_data =''
+        token = super().get_token(user)
         if user.role == "Craftsman":
             user_data = CraftsmanProfile.objects.get(user=user.id)
-        print(user_data,"user_datauser_data")
-        token['info_id'] = user_data.id
+            token['info_id'] = user_data.id
         token['username'] = user.username
+        
 
         return token
 
@@ -24,7 +23,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
             required=True,  
-            validators=[UniqueValidator(queryset=Custmer.objects.all())]
+            validators=[UniqueValidator(queryset=User.objects.all())]
             )
     password = serializers.CharField(min_length=8, write_only=True,style={'input_type': 'password'})
     
@@ -46,7 +45,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 class CustmerProfileSerializer(serializers.ModelSerializer):
 
     user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
-    print(user, "user in serrrr")
     class Meta:
         model = CustmerProfile
         fields = '__all__'
