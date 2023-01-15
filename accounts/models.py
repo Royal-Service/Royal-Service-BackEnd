@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from .managers import CustomUserManager
 
 class User(AbstractUser):
-
+    email = models.EmailField(unique=True, blank=False)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
@@ -25,10 +25,26 @@ class User(AbstractUser):
     email = models.EmailField(unique=True) # changes email to unique and blank to false
     role = models.CharField(max_length=50, choices=Role.choices)
 
+    # def save(self, *args, **kwargs):
+    #     if not self.pk:
+    #         self.role = self.role or self.base_role
+    #         return super().save(*args, **kwargs)
     def save(self, *args, **kwargs):
-        if not self.pk:
-            self.role = self.role or self.base_role
-            return super().save(*args, **kwargs)
+        if not self.id:
+            username = self.username
+            username_exists = True
+            counter = 1
+            self.username = username
+            while username_exists:
+                try:
+                    username_exists = User.objects.get(username=username)
+                    if username_exists:
+                        username = self.username + '_' + str(counter)
+                        counter += 1
+                except User.DoesNotExist:
+                    self.username = username
+                    break
+        super(User, self).save(*args, **kwargs)
 
 
 # CUSTMER Profile
@@ -50,7 +66,7 @@ class Custmer(User):
         proxy = True
 
 
-@receiver(post_save, sender=Custmer)
+@receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, *args, **kwargs):
     if created and instance.role == "CUSTMER":
         CustmerProfile.objects.create(user=instance)
