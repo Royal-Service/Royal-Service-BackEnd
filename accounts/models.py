@@ -66,14 +66,6 @@ class Custmer(User):
         proxy = True
 
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, *args, **kwargs):
-    if created and instance.role == "CUSTMER":
-        
-        CustmerProfile.objects.create(user=instance)
-
-
-
 class CustmerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=256, blank=True,null=True)
@@ -84,7 +76,10 @@ class CustmerProfile(models.Model):
     def __str__(self):
         return self.user.email
 
-
+@receiver(post_save, sender=Custmer)
+def create_user_profile(sender, instance, created, *args, **kwargs):
+    if created and instance.role == "CUSTMER":
+        CustmerProfile.objects.create(user=instance)
 # ProfessionalProfile
 
 class ProfessionalProfile(models.Model):
@@ -94,7 +89,7 @@ class ProfessionalProfile(models.Model):
     location = models.CharField(max_length=255,default="Jordan")
 
     def __str__(self):
-        return self.name
+        return self.user
 
     class Meta:
         abstract = True

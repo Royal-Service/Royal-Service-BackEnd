@@ -100,6 +100,11 @@ class RegisterSerializer(serializers.ModelSerializer):
     #     instance.save()
     #     return instance
 
+class CustmerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustmerProfile
+        fields = '__all__'
 
 class CustmerProfileSerializer(serializers.ModelSerializer):
 
