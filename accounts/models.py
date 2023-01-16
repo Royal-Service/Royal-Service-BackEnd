@@ -69,6 +69,7 @@ class Custmer(User):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, *args, **kwargs):
     if created and instance.role == "CUSTMER":
+        
         CustmerProfile.objects.create(user=instance)
 
 
@@ -118,7 +119,11 @@ class Craftsman(User):
 
 
 
-class CraftsmanProfile(ProfessionalProfile):
+class CraftsmanProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=256, blank=True,null=True)
+    last_name = models.CharField(max_length=256, blank=True,null=True)
+    phone = models.FloatField(blank=True,null=True)
     craft = models.CharField(max_length=256, blank=True,null=True)
 
 
