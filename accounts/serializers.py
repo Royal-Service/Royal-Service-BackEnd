@@ -26,7 +26,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
     password = serializers.CharField(min_length=8, write_only=True,style={'input_type': 'password'})
-    
     class Meta:
         model = Custmer
         fields = ('email','password')
@@ -65,40 +64,3 @@ class CraftsmanProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CraftsmanProfile
         fields = '__all__'
-
-
-
-
-
-
-
-
-
-
-
-
-
-# from rest_framework import serializers
-# from django.contrib.auth.models import User
-# from .models import Craftsman, Booking, Review
-
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ('id', 'username', 'email', 'password', 'role')
-#         extra_kwargs = {'password': {'write_only': True}}
-
-# class CraftsmanSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Craftsman
-#         fields = ('id', 'user', 'craft', 'location', 'rating')
-
-# class BookingSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Booking
-#         fields = ('id', 'craftsman', 'user', 'serviceType', 'date', 'price')
-
-# class ReviewSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Review
-#         fields = ('id', 'craftsman', 'user', 'rating', 'reviewText', 'date')
