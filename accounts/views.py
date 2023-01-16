@@ -30,7 +30,7 @@ class CustmerProfileView(generics.RetrieveUpdateDestroyAPIView):
     User = CustmerProfileModel
     queryset = User.objects.all()
     serializer_class = CustmerProfileSerializer
-    #permission_classes = [IsOwner]
+    permission_classes = [AllowAny]
 
 #-----------------------Craftsman--------------------#
 
