@@ -27,34 +27,42 @@ class RegisterSerializer(serializers.ModelSerializer):
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
     password = serializers.CharField(min_length=8, write_only=True,style={'input_type': 'password'})
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
-    role = serializers.ChoiceField(choices=User.Role.choices, required=True)
-
+    first_name = serializers.CharField(max_length=256, required=False)
+    last_name = serializers.CharField(max_length=256, required=False)
+    role = serializers.ChoiceField([("Custmer"),("Craftsman")])
     class Meta:
         model = User
-        fields = ('email','password', 'first_name', 'last_name', 'role')
+        fields = ('email','password','first_name','last_name',"role")
         extra_kwargs = {
-            "password": {'write_only': True}
+            "password" : {'write_only': True}
         }
 
     def create(self, validated_data):
-        email = validated_data.pop('email')
-        password = validated_data.pop("password", None)
-        first_name = validated_data.pop('first_name')
-        last_name = validated_data.pop('last_name')
         role = validated_data.pop('role')
-        user = User.objects.create_user(
-            email=email, password=password, first_name=first_name, last_name=last_name, role=role)
-        if user.role == "CUSTMER":
-            CustmerProfile.objects.create(user=user,first_name=first_name,last_name=last_name)
-        elif  user.role == "CRAFTSMAN":
-            CraftsmanProfile.objects.create(user=user,first_name=first_name,last_name=last_name)
+        password = validated_data.pop("password", None)
         instance = self.Meta.model(**validated_data)
-        if instance is not None:
-            instance.set_password(password)
-        instance.save()
-        return instance
+        if role == "Custmer":
+            if instance is not None:
+                instance.set_password(password)
+            instance.save()
+            #create profile
+            profile_data = {
+                'first_name': validated_data.get('first_name', None),
+                'last_name': validated_data.get('last_name', None),
+            }
+            profile = CustmerProfile.objects.create(user=instance, **profile_data)
+            return instance
+        else:
+            if instance is not None:
+                instance.set_password(password)
+            instance.save()
+            #create profile
+            profile_data = {
+                'first_name': validated_data.get('first_name', None),
+                'last_name': validated_data.get('last_name', None),
+            }
+            profile = CraftsmanProfile.objects.create(user=instance, **profile_data)
+            return instance
 
 # class RegisterSerializer(serializers.ModelSerializer):
 #     email = serializers.EmailField(

@@ -83,13 +83,13 @@ AUTH_USER_MODEL = "accounts.User"
 
 
 # Database
-# postgres://oouuqdzu:lRNaxe6uE3IKeIa69smmF-G5O-KVoIyY@mel.db.elephantsql.com/oouuqdzu
+# 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'vbatotkn',
-        'USER': 'vbatotkn',
-        'PASSWORD': 'NGIKeHiEtIpXs3e9-16lzawmGT_oqPco',
+        'NAME': 'kfnwbfhp',
+        'USER': 'kfnwbfhp',
+        'PASSWORD': 'adHuB3gLJlrzxFPqaubP0luJj_RmzbE2',
         'HOST': 'mel.db.elephantsql.com',
         'PORT': '5432',
     }
