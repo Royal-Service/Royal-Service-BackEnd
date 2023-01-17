@@ -4,7 +4,6 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .managers import CustomUserManager
-from phonenumber_field.modelfields import PhoneNumberField
 
 CRAFT = [('PLUMBING_WORK', 'plumbing Work'),
          ('ELECTRICAL_WORK', 'Electrical Work'),
@@ -51,7 +50,7 @@ class User(AbstractUser):
     # phone_number = PhoneNumberField(blank=True, help_text='Contact phone number')
     phone_number = models.CharField(max_length=11,blank=True, help_text='Contact phone number')
     location = models.CharField(max_length=50, choices=locations ,default='Amman',blank=True,null=True)
-    crafts = models.CharField(max_length=50, choices=CRAFT ,default='------',blank=True,null=True)
+    crafts = models.CharField(max_length=50, choices=CRAFT ,default='Electrical Work',blank=True,null=True)
 
     # def save(self, *args, **kwargs):
     #     if not self.pk:
@@ -153,7 +152,7 @@ class CraftsmanProfile(models.Model):
     # phone = models.FloatField(blank=True,null=True)
     # phone_number = PhoneNumberField(blank=True, help_text='Contact phone number')
     phone_number = models.CharField(max_length=11,blank=True, help_text='Contact phone number')
-    crafts = models.CharField(max_length=50, choices=CRAFT ,default='-------',blank=True,null=True)
+    crafts = models.CharField(max_length=50, choices=CRAFT ,default='Electrical Work',blank=True,null=True)
     # craft = models.CharField(max_length=256, blank=True,null=True)
     location = models.CharField(max_length=50, choices=locations ,default='Amman',blank=True,null=True)
     def __str__(self):
