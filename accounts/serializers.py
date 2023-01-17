@@ -6,7 +6,6 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import Custmer, CustmerProfile, CraftsmanProfile, User
 # from django.contrib.auth import authenticate
-# from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import RegexValidator
 
 
@@ -40,7 +39,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             )
         ]
     )
-    crafts = serializers.ChoiceField([( 'If you are a cruftsman please select your craft'),
+    crafts = serializers.ChoiceField([
          ('PLUMBING_WORK', 'plumbing Work'),
          ('ELECTRICAL_WORK', 'Electrical Work'),
          ('MOVING_AND_PACKING', 'Moving and packing'),

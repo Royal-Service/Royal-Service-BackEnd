@@ -15,7 +15,6 @@ urlpatterns = [
     path('Craftsmans/profile/<int:pk>', CraftsmanProfileView.as_view(), name='Craftsman_profile'),
     path('Craftsmans/profile/edit/<int:pk>', CraftsmanProfileEdit.as_view(), name='Craftsman_edit'),
 
-
 ]
 
 
