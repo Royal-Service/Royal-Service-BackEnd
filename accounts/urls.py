@@ -10,7 +10,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='auth_register'),
 
     path('profile/<int:pk>/', CustmerProfileView.as_view(), name='Custmer_profile'),
-
+    
     path('Craftsmans/', CraftsmanView.as_view(), name='Craftsman_list'),
     path('Craftsmans/profile/<int:pk>', CraftsmanProfileView.as_view(), name='Craftsman_profile'),
     path('Craftsmans/profile/edit/<int:pk>', CraftsmanProfileEdit.as_view(), name='Craftsman_edit'),
