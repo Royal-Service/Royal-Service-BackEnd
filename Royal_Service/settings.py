@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     "django_filters",
     "corsheaders",
+    'phonenumbers',
+    'phonenumber_field',
     #local-apps
     'accounts',
     "booking",

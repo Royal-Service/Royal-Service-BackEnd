@@ -4,6 +4,30 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .managers import CustomUserManager
+from phonenumber_field.modelfields import PhoneNumberField
+
+CRAFT = [('PLUMBING_WORK', 'plumbing Work'),
+         ('ELECTRICAL_WORK', 'Electrical Work'),
+         ('MOVING_AND_PACKING', 'Moving and packing'),
+         ('HOME_REPAIRS', 'Home_Repairs'),
+         ('POWER_WASHING', 'Power Washing'),
+         ('PAINTING', 'Painting'),
+         ('CARPENTRY', 'Carpentry'),
+         ('HVAC_REPAIR', 'HVAC_repair'),]
+locations = [
+    ('AMMAN', 'Amman'),
+    ('ZARQA', 'Zarqa'),
+    ('BALQA', 'Balqa'),
+    ('MADABA', 'Madaba'),
+    ('KARAK', 'Karak'),
+    ('IRBID', 'Irbid'),
+    ('MAFRAQ', 'Mafraq'),
+    ('JERASH', 'Jerash'),
+    ('TAFILAH', 'Tafilah'),
+    ('MAAN', "Ma'an"),
+    ('AJLOUN', 'Ajloun'),
+    ('AQAPA', 'Aqaba'),
+]
 
 class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
@@ -24,6 +48,10 @@ class User(AbstractUser):
 
     email = models.EmailField(unique=True) # changes email to unique and blank to false
     role = models.CharField(max_length=50, choices=Role.choices)
+    # phone_number = PhoneNumberField(blank=True, help_text='Contact phone number')
+    phone_number = models.CharField(max_length=11,blank=True, help_text='Contact phone number')
+    location = models.CharField(max_length=50, choices=locations ,default='Amman',blank=True,null=True)
+    crafts = models.CharField(max_length=50, choices=CRAFT ,default='------',blank=True,null=True)
 
     # def save(self, *args, **kwargs):
     #     if not self.pk:
@@ -70,7 +98,10 @@ class CustmerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=256, blank=True,null=True)
     last_name = models.CharField(max_length=256, blank=True,null=True)
-    phone = models.FloatField(blank=True,null=True)
+    # phone = models.FloatField(blank=True,null=True)
+    # phone_number = PhoneNumberField(blank=True, help_text='Contact phone number')
+    phone_number = models.CharField(max_length=11,blank=True, help_text='Contact phone number')
+    location = models.CharField(max_length=50, choices=locations ,default='Amman',blank=True,null=True)
 
 
     def __str__(self):
@@ -80,19 +111,20 @@ class CustmerProfile(models.Model):
 def create_user_profile(sender, instance, created, *args, **kwargs):
     if created and instance.role == "CUSTMER":
         CustmerProfile.objects.create(user=instance)
+
 # ProfessionalProfile
 
-class ProfessionalProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=256, blank=True,null=True)
-    phone = models.FloatField(blank=True,null=True)
-    location = models.CharField(max_length=255,default="Jordan")
+# class ProfessionalProfile(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=256, blank=True,null=True)
+#     # phone = models.FloatField(blank=True,null=True)
+#     location = models.CharField(max_length=255,default="Jordan")
 
-    def __str__(self):
-        return self.user
+#     def __str__(self):
+#         return self.user
 
-    class Meta:
-        abstract = True
+#     class Meta:
+#         abstract = True
 
 # CRAFTSMAN Profile
 
@@ -118,8 +150,12 @@ class CraftsmanProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=256, blank=True,null=True)
     last_name = models.CharField(max_length=256, blank=True,null=True)
-    phone = models.FloatField(blank=True,null=True)
-    craft = models.CharField(max_length=256, blank=True,null=True)
+    # phone = models.FloatField(blank=True,null=True)
+    # phone_number = PhoneNumberField(blank=True, help_text='Contact phone number')
+    phone_number = models.CharField(max_length=11,blank=True, help_text='Contact phone number')
+    crafts = models.CharField(max_length=50, choices=CRAFT ,default='-------',blank=True,null=True)
+    # craft = models.CharField(max_length=256, blank=True,null=True)
+    location = models.CharField(max_length=50, choices=locations ,default='Amman',blank=True,null=True)
     def __str__(self):
         return self.first_name
 
@@ -129,7 +165,6 @@ class CraftsmanProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.role == "CRAFTSMAN":
         CraftsmanProfile.objects.create(user=instance)
-
 
 
 

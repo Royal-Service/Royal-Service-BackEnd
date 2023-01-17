@@ -6,6 +6,8 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import Custmer, CustmerProfile, CraftsmanProfile, User
 # from django.contrib.auth import authenticate
+# from phonenumber_field.modelfields import PhoneNumberField
+from django.core.validators import RegexValidator
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -29,10 +31,40 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(min_length=8, write_only=True,style={'input_type': 'password'})
     first_name = serializers.CharField(max_length=256, required=False)
     last_name = serializers.CharField(max_length=256, required=False)
+    phone_number = serializers.CharField(
+        max_length=11,
+        validators=[
+            RegexValidator(
+                regex=r'^(07)[0-9]{8}$',
+                message='Please enter a valid Jordanian phone number starting with 07'
+            )
+        ]
+    )
+    crafts = serializers.ChoiceField([( 'If you are a cruftsman please select your craft'),
+         ('PLUMBING_WORK', 'plumbing Work'),
+         ('ELECTRICAL_WORK', 'Electrical Work'),
+         ('MOVING_AND_PACKING', 'Moving and packing'),
+         ('HOME_REPAIRS', 'Home_Repairs'),
+         ('POWER_WASHING', 'Power Washing'),
+         ('PAINTING', 'Painting'),
+         ('CARPENTRY', 'Carpentry'),
+         ('HVAC_REPAIR', 'HVAC_repair'),])
+    location = serializers.ChoiceField([('AMMAN', 'Amman'),
+    ('ZARQA', 'Zarqa'),
+    ('BALQA', 'Balqa'),
+    ('MADABA', 'Madaba'),
+    ('KARAK', 'Karak'),
+    ('IRBID', 'Irbid'),
+    ('MAFRAQ', 'Mafraq'),
+    ('JERASH', 'Jerash'),
+    ('TAFILAH', 'Tafilah'),
+    ('MAAN', "Ma'an"),
+    ('AJLOUN', 'Ajloun'),
+    ('AQAPA', 'Aqaba'),])
     role = serializers.ChoiceField([("Custmer"),("Craftsman")])
     class Meta:
         model = User
-        fields = ('email','password','first_name','last_name',"role")
+        fields = ('email','password','first_name','last_name',"phone_number","location","role","crafts")
         extra_kwargs = {
             "password" : {'write_only': True}
         }
@@ -49,6 +81,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             profile_data = {
                 'first_name': validated_data.get('first_name', None),
                 'last_name': validated_data.get('last_name', None),
+                'phone_number': validated_data.get('phone_number', None),
+                'location': validated_data.get('location', None),
+                
             }
             profile = CustmerProfile.objects.create(user=instance, **profile_data)
             return instance
@@ -60,6 +95,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             profile_data = {
                 'first_name': validated_data.get('first_name', None),
                 'last_name': validated_data.get('last_name', None),
+                'phone_number': validated_data.get('phone_number', None),
+                'location': validated_data.get('location', None),
+                'crafts': validated_data.get('crafts', None),
             }
             profile = CraftsmanProfile.objects.create(user=instance, **profile_data)
             return instance
