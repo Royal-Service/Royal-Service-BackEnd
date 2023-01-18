@@ -13,10 +13,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):  # 2
         token = super().get_token(user)
-        if user.role == "Craftsman":
-            user_data = CraftsmanProfile.objects.get(user=user.id)
-            token['info_id'] = user_data.id
-        token['username'] = user.username
+        # if user.crafts != '':
+        #     user_data = CraftsmanProfile.objects.get(user=user.id)
+        # else:
+        #     user_data = CustmerProfile.objects.get(user=user.id)
+        token['email'] = user.email
 
         return token
 
@@ -60,7 +61,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     ('MAAN', "Ma'an"),
     ('AJLOUN', 'Ajloun'),
     ('AQAPA', 'Aqaba'),])
-    role = serializers.ChoiceField([("Custmer"),("Craftsman")])
+    role = serializers.ChoiceField([("Customer"),("Craftsman")])
     class Meta:
         model = User
         fields = ('email','password','first_name','last_name',"phone_number","location","role","crafts")
@@ -72,7 +73,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         role = validated_data.pop('role')
         password = validated_data.pop("password", None)
         instance = self.Meta.model(**validated_data)
-        if role == "Custmer":
+        if role == "Customer":
             if instance is not None:
                 instance.set_password(password)
             instance.save()
