@@ -35,3 +35,11 @@ class Booking(models.Model):
         
     def __str__(self):
         return f"Booking on {self.day} at {self.time} from {self.custmer.first_name} for {self.craftsman.crafts} made by {self.craftsman.user.first_name}"
+
+
+
+
+
+
+
+

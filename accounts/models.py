@@ -1,9 +1,11 @@
 from email.policy import default
 from django.db import models
+from reviews.models import ReviewRating as REVIEW
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .managers import CustomUserManager
+from django.db.models import Avg, Count
 
 CRAFT = [('PLUMBING_WORK', 'plumbing Work'),
          ('ELECTRICAL_WORK', 'Electrical Work'),
@@ -156,6 +158,19 @@ class CraftsmanProfile(models.Model):
     # craft = models.CharField(max_length=256, blank=True,null=True)
     location = models.CharField(max_length=50, choices=locations ,default='Amman',blank=True,null=True)
     price= models.DecimalField(max_digits=10, decimal_places=2 ,default=5)
+    def averageReview(self):
+        reviews = REVIEW.objects.filter(craftsman=self, status=True).aggregate(average=Avg('rating'))
+        avg = 0
+        if reviews['average'] is not None:
+            avg = float(reviews['average'])
+        return avg
+    
+    def countReview(self):
+        reviews = REVIEW.objects.filter(craftsman=self, status=True).aggregate(count=Count('id'))
+        count = 0
+        if reviews['count'] is not None:
+            count = int(reviews['count'])
+        return count
     
     def __str__(self):
         return self.first_name
