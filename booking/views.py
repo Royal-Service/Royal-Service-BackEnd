@@ -3,7 +3,79 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView,CreateAPIView,L
 
 from .serializers import BookingSerializer,BookingDetailsSerializer,CreateBookingSerializer
 from .models import Booking
+from rest_framework.views import APIView
 
+from rest_framework import generics,permissions,status
+
+
+from datetime import datetime, timedelta
+from django.http import HttpResponse
+from rest_framework.response import Response
+
+def isCraftsmanValid(craftsman):
+    try:
+        craftsman_obj = CraftsmanProfile.objects.get(pk=craftsman)
+        print(craftsman_obj)
+        if craftsman_obj:
+            return True
+        else:
+            return False
+    except:
+        return False
+
+class BookingListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+
+class BookingRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+    
+class BookingSubmitAPIView(APIView):
+    # permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        times = [
+            "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM"
+        ]
+        today = datetime.now()
+        minDate = today.strftime('%Y-%m-%d')
+        deltatime = today + timedelta(days=21)
+        strdeltatime = deltatime.strftime('%Y-%m-%d')
+        maxDate = strdeltatime
+
+        day = request.data.get('day')
+        service = request.data.get('service')
+        craftsman = request.data.get("Craftsman")
+        time = request.data.get("time")
+        date = day
+        existing_booking = Booking.objects.filter(day=day,time=time,craftsman=craftsman)
+
+        if service != None:
+            if day <= maxDate and day >= minDate:
+                if date != 'Friday' :
+                    if isCraftsmanValid(craftsman):
+                        if not existing_booking:
+                            print(request.user)
+                            booking = Booking.objects.create(
+                                custmer=request.user,
+                                craftsman=craftsman,
+                                day=day,
+                                time=time,
+                                description=service
+                            )
+                            booking.save()
+                            return Response({"status": "Booking created successfully!"}, status=status.HTTP_201_CREATED)
+                        else:
+                            return Response({"status": "The selected craftsman is not available at this time."}, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        return Response({"status": "The selected craftsman is not valid."}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response({"status": "This day is not available for booking."}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"status": "This date is not available for booking."}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"status": "Please Select A Service!"}, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateBookingView(CreateAPIView):
     '''
@@ -43,4 +115,6 @@ class BookingRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     # permission_classes = [IsCustmerOrReadOnly]
     queryset = Booking.objects.all()
     serializer_class = BookingDetailsSerializer
-   
+
+
+
