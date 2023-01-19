@@ -46,5 +46,4 @@ class CreateReviewView(CreateAPIView):
     
     def perform_create(self, serializer):
         custmer = CustmerProfile.objects.get(user=self.request.user.id)
-
         return serializer.save(custmer=custmer)
