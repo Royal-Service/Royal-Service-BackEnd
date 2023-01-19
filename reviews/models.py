@@ -5,7 +5,7 @@ from django.db import models
 
 class ReviewRating(models.Model):
     craftsman = models.ForeignKey('accounts.CraftsmanProfile', on_delete=models.CASCADE)
-    custmer = models.ForeignKey('accounts.CustmerProfile', on_delete=models.CASCADE)
+    custmer = models.ForeignKey('accounts.CustmerProfile', on_delete=models.CASCADE,blank=True,null=True)
     subject = models.CharField(max_length=100, blank=True)
     review = models.TextField(max_length=500, blank=True)
     rating = models.FloatField()

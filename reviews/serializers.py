@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import ReviewRating
-from accounts.serializers import CraftsmanProfileSerializer,CustmerProfileSerializer
+
 class ReviewSerializer(serializers.ModelSerializer):
     craftsman = serializers.PrimaryKeyRelatedField(read_only=True)
     custmer = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -8,3 +8,10 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewRating
         fields = '__all__'
+
+class CreateReviewRatingSerializer(serializers.ModelSerializer):
+    custmer = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = ReviewRating
+        fields = '__all__'    
+
