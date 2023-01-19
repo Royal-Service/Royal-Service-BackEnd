@@ -11,6 +11,9 @@ from rest_framework import generics,permissions,status
 from datetime import datetime, timedelta
 from django.http import HttpResponse
 from rest_framework.response import Response
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 def isCraftsmanValid(craftsman):
     try:
@@ -56,10 +59,11 @@ class BookingSubmitAPIView(APIView):
                 if date != 'Friday' :
                     if isCraftsmanValid(craftsman):
                         if not existing_booking:
-                            print(request.user)
+                            custmer_profile = CustmerProfile.objects.get(user=request.user)
+                            craftsman_obj = CraftsmanProfile.objects.get(pk=craftsman)
                             booking = Booking.objects.create(
-                                custmer=request.user,
-                                craftsman=craftsman,
+                                custmer=custmer_profile,
+                                craftsman=craftsman_obj,
                                 day=day,
                                 time=time,
                                 description=service
