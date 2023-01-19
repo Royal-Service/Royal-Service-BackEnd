@@ -6,6 +6,9 @@ from rest_framework.response import Response
 from rest_framework import status,generics
 from .models import ReviewRating
 from .serializers import ReviewSerializer
+from accounts.models import CustmerProfile
+from .serializers import CreateReviewRatingSerializer
+from rest_framework.generics import CreateAPIView
 
 
 class ReviewView(APIView):
@@ -34,3 +37,14 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = ReviewRating.objects.all()
     serializer_class = ReviewSerializer
     # permission_classes = [permissions.IsAuthenticated]
+
+
+class CreateReviewView(CreateAPIView):
+
+    queryset = ReviewRating.objects.all()
+    serializer_class = CreateReviewRatingSerializer
+    
+    def perform_create(self, serializer):
+        custmer = CustmerProfile.objects.get(user=self.request.user.id)
+
+        return serializer.save(custmer=custmer)
