@@ -1,15 +1,13 @@
 
 
 # Create your views here.
-from django.shortcuts import render, redirect
-from django.contrib import messages
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import generics
+from rest_framework import status,generics
 from .models import ReviewRating
 from .serializers import ReviewSerializer
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+
+
 class ReviewView(APIView):
     def post(self, request):
         serializer = ReviewSerializer(data=request.data)
@@ -32,7 +30,7 @@ class ReviewViewEdit(generics.RetrieveUpdateDestroyAPIView):
         serializer.save(custmer=self.request.user)
 
 
-class ReviewDetailView(RetrieveUpdateDestroyAPIView):
+class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = ReviewRating.objects.all()
     serializer_class = ReviewSerializer
     # permission_classes = [permissions.IsAuthenticated]
