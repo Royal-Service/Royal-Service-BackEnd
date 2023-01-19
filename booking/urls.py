@@ -9,13 +9,13 @@ urlpatterns = [
     #     BookingRetrieveUpdateDestroyView.as_view(),
     #     name="booking_detail",
     # ),
-    path("create/", CreateBookingView.as_view(), name="create_Booking"),
+    path("create/", CreateBookingView.as_view(), name="create_Booking"), # just for admin if he want to booking 
 
 
 
-    path('', BookingListCreateAPIView.as_view(),
+    path('', BookingListCreateAPIView.as_view(), # to get all booking list 
          name='booking-list-create'),
-    path('bookings/<int:pk>/', BookingRetrieveUpdateDestroyAPIView.as_view(),
-         name='booking-retrieve-update-destroy'),
-    path('bookings/submit/', BookingSubmitAPIView.as_view(), name='booking-submit'),
+    path('<int:pk>/', BookingRetrieveUpdateDestroyAPIView.as_view(),
+         name='booking-retrieve-update-destroy'), # you can use it  get  update and  delete 
+    path('submit/', BookingSubmitAPIView.as_view(), name='booking-submit'),
 ]

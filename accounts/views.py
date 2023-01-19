@@ -54,7 +54,7 @@ class CraftsmanProfileEdit(generics.RetrieveUpdateDestroyAPIView):
     '''
     queryset = CraftsmanProfile.objects.all()
     serializer_class = CraftsmanProfileSerializer
-    permission_classes = [IsOwner]
+    permission_classes = [AllowAny]
 
 
 

@@ -24,7 +24,7 @@ class Booking(models.Model):
     craftsman = models.ForeignKey(
         CraftsmanProfile, on_delete=models.CASCADE, related_name="craftsman",blank=True,null=True
     )
-    description = models.TextField(blank=True,null=True)
+    description = models.TextField(blank=True,null=True,default="No description")
     created_at = models.DateField(auto_now_add=True)
     day = models.DateField(default=datetime.now)
     time = models.CharField(max_length=10, choices=TIME_CHOICES, default="3 PM")
@@ -34,4 +34,4 @@ class Booking(models.Model):
         verbose_name_plural = "Booking"
         
     def __str__(self):
-        return self.description
+        return f"Booking on {self.day} at {self.time} from {self.custmer.first_name} for {self.craftsman.crafts} made by {self.craftsman.user.first_name}"
