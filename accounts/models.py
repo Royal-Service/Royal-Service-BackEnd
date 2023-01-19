@@ -155,6 +155,8 @@ class CraftsmanProfile(models.Model):
     crafts = models.CharField(max_length=50, choices=CRAFT ,default='Electrical Work',blank=True,null=True)
     # craft = models.CharField(max_length=256, blank=True,null=True)
     location = models.CharField(max_length=50, choices=locations ,default='Amman',blank=True,null=True)
+    price= models.DecimalField(max_digits=10, decimal_places=2 ,default=5)
+    
     def __str__(self):
         return self.first_name
 
