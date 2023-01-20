@@ -25,8 +25,9 @@ class GetReviewViewCraftsman(APIView):
     def get_average_rating(self, craftsman_id):
         reviews = ReviewRating.objects.filter(craftsman=craftsman_id)
         average_rating = reviews.aggregate(Avg('rating'))
+        print(average_rating)
         count = reviews.aggregate(Count('id'))
-        return {'average_rating': average_rating, 'count': count}
+        return [average_rating["rating__avg"],count["id__count"]]
     
     def get(self, request, craftsman_id):
         try:
@@ -36,8 +37,10 @@ class GetReviewViewCraftsman(APIView):
             average_rating =self.get_average_rating(craftsman_id)
 
             data = {
-                'average_rating': average_rating,
+                "count":average_rating[1],
+                'average_rating': average_rating[0],
                 'reviews': serializer.data
+                
             }
             return Response(data, status=status.HTTP_200_OK)
         except CraftsmanProfile.DoesNotExist:
