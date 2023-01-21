@@ -59,7 +59,7 @@ class BookingSubmitAPIView(APIView):
 
         # if service != None:
         if day <= maxDate and day >= minDate:
-            # if date != 'Friday' :
+            # if date != 'Friday' : // fridays!
                 if isCraftsmanValid(craftsman):
                     if not existing_booking:
                         custmer_profile = CustmerProfile.objects.get(user=request.user)
