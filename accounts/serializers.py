@@ -13,11 +13,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):  # 2
         token = super().get_token(user)
-        # if user.crafts != '':
-        #     user_data = CraftsmanProfile.objects.get(user=user.id)
-        # else:
-        #     user_data = CustmerProfile.objects.get(user=user.id)
         token['email'] = user.email
+
+        if hasattr(user, 'craftsmanprofile'):
+            token['craftsman_id'] = user.craftsmanprofile.id
+
+        if hasattr(user, 'custmerprofile'):
+            token['custmer_id'] = user.custmerprofile.id
 
         return token
 
