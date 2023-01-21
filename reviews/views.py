@@ -36,12 +36,12 @@ class GetReviewViewCraftsman(APIView):
             serializer = ReviewSerializer(reviews, many=True)
             average_rating =self.get_average_rating(craftsman_id)
 
-            data = {
-                "count":average_rating[1],
-                'average_rating': average_rating[0],
-                'reviews': serializer.data
+            data = [
+               average_rating[1],
+                 average_rating[0],
+               { 'reviews': serializer.data}
                 
-            }
+            ]
             return Response(data, status=status.HTTP_200_OK)
         except CraftsmanProfile.DoesNotExist:
             return Response({"error": "Craftsman not found."}, status=status.HTTP_404_NOT_FOUND)
