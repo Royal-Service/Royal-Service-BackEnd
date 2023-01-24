@@ -1,0 +1,7 @@
+build:
+  docker:
+    web: Dockerfile
+release:
+  image: web
+run:
+  web: gunicorn Royal_Service.wsgi --workers 4

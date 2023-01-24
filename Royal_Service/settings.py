@@ -19,10 +19,7 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
-     SECRET_KEY=(
-        str,
-        'django-insecure-&@9zc1!(#oa7-zd*_uh1a^ic&o2s5hxc9gxois2m+n8u778-ir',
-    ),
+
     DEBUG=(bool, False),
     ENVIRONMENT=(str, "PRODUCTION"),
     ALLOW_ALL_ORIGINS=(bool, False),
