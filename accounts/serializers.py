@@ -17,10 +17,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         if hasattr(user, 'craftsmanprofile'):
             token['craftsman_id'] = user.craftsmanprofile.id
-
+            print("craftsman")
         if hasattr(user, 'custmerprofile'):
             token['custmer_id'] = user.custmerprofile.id
-
+            print("custmer")
         return token
 
 # Register a new user
