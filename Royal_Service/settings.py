@@ -9,24 +9,53 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 
 from pathlib import Path
 from datetime import timedelta
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env(
+     SECRET_KEY=(
+        str,
+        'django-insecure-&@9zc1!(#oa7-zd*_uh1a^ic&o2s5hxc9gxois2m+n8u778-ir',
+    ),
+    DEBUG=(bool, False),
+    ENVIRONMENT=(str, "PRODUCTION"),
+    ALLOW_ALL_ORIGINS=(bool, False),
+    ALLOWED_HOSTS=(list, []),
+    ALLOWED_ORIGINS=(list, []),
+    DATABASE_ENGINE=(str, "django.db.backends.sqlite3"),
+    DATABASE_NAME=(str, BASE_DIR / "db.sqlite3"),
+    DATABASE_USER=(str, ""),
+    DATABASE_PASSWORD=(str, ""),
+    DATABASE_HOST=(str, ""),
+    DATABASE_PORT=(int, 5432),
+)
 
+environ.Env.read_env()
+
+ENVIRONMENT = env.str("ENVIRONMENT")
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+
+SECRET_KEY = env.str("SECRET_KEY")
+
+DEBUG = env.bool("DEBUG")
+
+ALLOWED_HOSTS = tuple(env.list("ALLOWED_HOSTS"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&@9zc1!(#oa7-zd*_uh1a^ic&o2s5hxc9gxois2m+n8u778-ir'
+# SECRET_KEY = 'django-insecure-&@9zc1!(#oa7-zd*_uh1a^ic&o2s5hxc9gxois2m+n8u778-ir'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -51,16 +80,18 @@ INSTALLED_APPS = [
 
 ]
 
+
 MIDDLEWARE = [
     
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'Royal_Service.urls'
@@ -86,19 +117,22 @@ WSGI_APPLICATION = 'Royal_Service.wsgi.application'
 AUTH_USER_MODEL = "accounts.User"
 
 
+
+
+
 # Database
-# 
+# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'kfnwbfhp',
-        'USER': 'kfnwbfhp',
-        'PASSWORD': 'adHuB3gLJlrzxFPqaubP0luJj_RmzbE2',
-        'HOST': 'mel.db.elephantsql.com',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": env.str("DATABASE_ENGINE"),
+        "NAME": env.str("DATABASE_NAME"),
+        "USER": env.str("DATABASE_USER"),
+        "PASSWORD": env.str("DATABASE_PASSWORD"),
+        "HOST": env.str("DATABASE_HOST"),
+        "PORT": env.int("DATABASE_PORT"),
     }
 }
-
 
 
 # Password validation
@@ -192,8 +226,16 @@ SIMPLE_JWT = {
 }
 
 
+ALLOWED_HOSTS = ['*']
+
+
 
 CSRF_COOKIE_SECURE = False
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://localhost:3000']
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = [    "http://localhost:3000",    "http://127.0.0.1:8000",    "http://127.0.0.1:3000",    "http://localhost:8000",]
+
+
+CORS_ALLOWED_ORIGINS = tuple(env.list("ALLOWED_ORIGINS"))
+
+
+CORS_ORIGIN_WHITELIST = tuple(env.list("ALLOWED_ORIGINS"))
+CORS_ALLOW_ALL_ORIGINS = env.bool("ALLOW_ALL_ORIGINS")
+CSRF_TRUSTED_ORIGINS = tuple(env.list("ALLOWED_ORIGINS"))
